@@ -1,8 +1,6 @@
-# The deliberate misconfiguration (never applied — shown for documentation only)
+# What this looked like before the fix
 
-This is what `main.tf`'s `azurerm_network_security_group` block looked like
-*before* the fix, to document the vulnerable state without ever actually
-creating it on a real subscription, even briefly:
+Never actually applied anywhere — this is what the `azurerm_network_security_group` block in `main.tf` would've looked like if I'd built the vulnerable version instead of jumping straight to the fix:
 
 ```hcl
 security_rule {
@@ -13,28 +11,16 @@ security_rule {
   protocol                   = "Tcp"
   source_port_range          = "*"
   destination_port_range     = "22"
-  source_address_prefix      = "0.0.0.0/0"   # <-- the misconfiguration: internet-wide SSH access
+  source_address_prefix      = "0.0.0.0/0"   # the actual problem
   destination_address_prefix = "*"
 }
 ```
 
-## Why this is dangerous
-`0.0.0.0/0` on port 22 means any host on the internet can attempt to
-authenticate. This is one of the single most common real-world cloud
-misconfigurations, and exactly what Microsoft Defender for Cloud's
-"Management ports should be closed" recommendation flags automatically —
-that's the paid-tier detection equivalent to this exercise (see the main
-README's tool comparison table).
+## Why this matters
+`0.0.0.0/0` on port 22 means literally any host on the internet can attempt to authenticate against it. It's one of the most common cloud misconfigurations there is, and it's exactly what Microsoft Defender for Cloud's "management ports should be closed" check flags automatically — the paid-tool version of the review I did by hand here.
 
-## The fix, applied in `main.tf`
-Replace `0.0.0.0/0` with a specific known CIDR (`var.allowed_ssh_source_cidr`,
-e.g. your own home/office IP as a `/32`) — narrowing the source range from
-"the entire internet" to "the one place you actually connect from."
+## What changed
+Swapped `0.0.0.0/0` for a specific CIDR (`var.allowed_ssh_source_cidr`) — your own IP as a `/32`, instead of the whole internet.
 
-## What I learned / trade-offs
-A `/32` source range is safe but brittle — it breaks the moment your IP
-changes (common on home broadband). The more robust real-world fix is to
-remove direct SSH exposure entirely and go through a bastion host or
-Azure Bastion, which never opens port 22 to any public IP at all. Documented
-here as the "next step up" rather than implemented, since it needs an extra
-resource (`azurerm_bastion_host`) with its own cost.
+## The honest limitation of the fix
+A `/32` is safe but fragile — it breaks the second your home IP changes, which happens more often than people expect on residential connections. The better long-term answer is to not expose SSH directly at all and put a bastion host (Azure Bastion) in front of it instead. Didn't build that here, mostly because it's an extra always-on resource with its own cost, but it's the right answer if this were a real environment instead of a lab.

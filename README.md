@@ -1,29 +1,18 @@
-# Terraform Labs
+# terraform-labs
 
-**Status: in progress** — one folder per exercise while working through Terraform Associate study material, on an Azure free-tier subscription (never a work/production subscription).
+Working through the Terraform Associate material one exercise per folder. Doing this because I want actual muscle memory with it, not just enough to pass a multiple-choice exam — a lot of the detection/security automation roles I'm looking at expect you to be comfortable deploying infrastructure as code, not just reading someone else's Terraform.
 
-## What this is
-Incremental Terraform exercises: a single resource, remote state, modules, and Terraform Cloud integration.
+Everything here runs against a free-tier Azure subscription that's completely separate from any work tenant. Never pointing this at anything real.
 
-## Why I built it
-To build real infrastructure-as-code muscle memory rather than just pass the exam, and to have something concrete to show for the certification.
+`.tfstate` and any `.tfvars` with actual values are gitignored from the start — not something I added after a scare, just built in from the first commit. No real subscription IDs or credentials ever get committed; placeholders and environment variables only. There's also a gitleaks hook (see setup below) as a second layer, though I've already found it doesn't catch everything — a password string with a `$` in it slipped past it once during testing, so I don't treat "the hook didn't complain" as proof of anything.
 
-## How it works
-- `01-first-resource-group/` through `04-terraform-cloud-integration/` — each is a standalone exercise with its own README
-
-## What I learned / trade-offs
-_(filled in per exercise)_
-
-## Security note
-`.tfstate` and `.tfvars` with real values are gitignored from the start (see `.gitignore`). No real subscription IDs, tenant IDs, or credentials are committed — use `<your-subscription-id>` placeholders or environment variables. A pre-commit hook (`.githooks/pre-commit`, powered by [gitleaks](https://github.com/gitleaks/gitleaks)) scans staged changes for likely secrets before every commit — run the one-time setup below after cloning to activate it.
-
-## Cloud account safety (applies to every exercise here)
-- Enable MFA on the Microsoft/Azure account tied to this subscription — same standard as the GitHub account.
-- Set a spending alert/budget cap on the subscription before creating any resource (Cost Management + Billing → Budgets).
-- Auth is always via `az login` (short-lived token) — never a long-lived client secret or key committed anywhere.
-- Run `terraform destroy` when an exercise is done so nothing keeps running (and costing money) unattended.
+## Before touching any of this
+- MFA on the Microsoft account tied to the subscription
+- A spending cap set in Cost Management before creating anything — not after
+- Auth always through `az login`, never a long-lived secret sitting in a file
+- `terraform destroy` when I'm done with an exercise, so nothing keeps running unattended
 
 ## One-time setup after cloning
 ```bash
-git config core.hooksPath .githooks   # enables the gitleaks secret-scan on commit
+git config core.hooksPath .githooks
 ```

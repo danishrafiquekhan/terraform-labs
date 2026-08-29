@@ -1,32 +1,28 @@
-# 01 — First Resource Group
+# 01 — first resource group
 
-**Status: ready to run** — this is a working Terraform config, not a template. It just needs your own free-tier Azure subscription ID.
+The smallest possible thing: log into Azure, declare one resource group, apply it, tear it down. This is a real working config, not a template — just needs your own subscription ID.
 
-## What this is
-The smallest possible Terraform exercise: authenticate to Azure, declare one resource group, apply it, destroy it.
+## Before running it
+1. Use a free-tier subscription, not a work one. Sign up at azure.microsoft.com/free if you need one.
+2. Set a spending cap in the portal (Cost Management → Budgets) before creating anything.
+3. `az login` — opens a browser, authenticates, stores a short-lived token. Nothing gets written into this repo from that.
+4. `cp terraform.tfvars.example terraform.tfvars` and fill in your subscription ID. That file's gitignored, it never gets committed.
 
-## Before you run this
-1. **Use a free-tier subscription, never a work/production one.** Create one at https://azure.microsoft.com/free if you don't have one.
-2. **Set a spending alert/budget cap** in the Azure portal on that subscription immediately (Cost Management + Billing → Budgets) — do this before creating any resource, not after.
-3. Log in with the Azure CLI (already installed): `az login` — this opens a browser, authenticates you, and stores a short-lived token locally. No password or key is ever written into this repo.
-4. Copy the example vars file and fill in your own subscription ID: `cp terraform.tfvars.example terraform.tfvars` (this file is gitignored — it will never be committed).
-
-## How to run it
+## Running it
 ```bash
 az login
-az account list --output table          # confirm you're on the lab subscription, not a work one
+az account list --output table    # double check you're on the lab subscription
 terraform init
 terraform plan
 terraform apply
 ```
 
-## Clean up (do this when done, so nothing keeps costing money)
+## Cleaning up
 ```bash
 terraform destroy
 ```
 
-## What I learned / trade-offs
-_(fill in after running it — e.g. what `az login` device flow looked like, what the plan output showed before apply)_
+## Notes from actually running this
+`terraform init` and `terraform validate` both pass clean — confirmed the provider config and resource block are syntactically correct. Haven't actually run `apply` against a real subscription yet since I don't have one set up right now; that's the honest next step, not something I'm claiming is done.
 
-## Security note
-`terraform.tfvars` and `.tfstate` are gitignored at the repo root — they can contain real subscription IDs and resource state. Never remove those `.gitignore` entries.
+`.tfvars` and `.tfstate` are gitignored at the repo root — don't touch those entries even if it seems convenient in the moment.
