@@ -1,0 +1,3 @@
+subscription_id         = "<your-free-tier-subscription-id>"
+location                = "westeurope"
+allowed_ssh_source_cidr = "<your-ip-address>/32"
