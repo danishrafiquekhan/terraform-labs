@@ -15,10 +15,15 @@ To build real infrastructure-as-code muscle memory rather than just pass the exa
 _(filled in per exercise)_
 
 ## Security note
-`.tfstate` and `.tfvars` with real values are gitignored from the start (see `.gitignore`). No real subscription IDs, tenant IDs, or credentials are committed — use `<your-subscription-id>` placeholders or environment variables. A pre-commit hook (`.git/hooks/pre-commit`, powered by [gitleaks](https://github.com/gitleaks/gitleaks)) scans staged changes for likely secrets before every commit on this machine.
+`.tfstate` and `.tfvars` with real values are gitignored from the start (see `.gitignore`). No real subscription IDs, tenant IDs, or credentials are committed — use `<your-subscription-id>` placeholders or environment variables. A pre-commit hook (`.githooks/pre-commit`, powered by [gitleaks](https://github.com/gitleaks/gitleaks)) scans staged changes for likely secrets before every commit — run the one-time setup below after cloning to activate it.
 
 ## Cloud account safety (applies to every exercise here)
 - Enable MFA on the Microsoft/Azure account tied to this subscription — same standard as the GitHub account.
 - Set a spending alert/budget cap on the subscription before creating any resource (Cost Management + Billing → Budgets).
 - Auth is always via `az login` (short-lived token) — never a long-lived client secret or key committed anywhere.
 - Run `terraform destroy` when an exercise is done so nothing keeps running (and costing money) unattended.
+
+## One-time setup after cloning
+```bash
+git config core.hooksPath .githooks   # enables the gitleaks secret-scan on commit
+```
