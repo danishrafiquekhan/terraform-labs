@@ -16,3 +16,5 @@ Everything here runs against a free-tier Azure subscription that is completely s
 ```bash
 git config core.hooksPath .githooks
 ```
+
+For the principles behind these exercises (state management, why remote state matters, the backend bootstrap problem, detection-mode-first WAF rollout) see [Part 3.7–3.9](https://github.com/danishrafiquekhan/security-lab-notes/blob/main/parts/03c-tools-qemu-terraform-detection-as-code.md) and [Part 8](https://github.com/danishrafiquekhan/security-lab-notes/blob/main/parts/08-cloud-security-iac.md) of `security-lab-notes`.
