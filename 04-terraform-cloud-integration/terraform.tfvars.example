@@ -1,0 +1,7 @@
+# Only useful for `terraform plan` against a local backend override while
+# testing. In the actual HCP Terraform workspace, subscription_id is set as
+# a workspace variable instead, this file does not get read during a real
+# remote run. See README.md.
+subscription_id     = "<your-free-tier-subscription-id>"
+location            = "westeurope"
+resource_group_name = "rg-terraform-lab-04"

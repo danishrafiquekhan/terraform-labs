@@ -1,0 +1,6 @@
+subscription_id         = "<your-free-tier-subscription-id>"
+location                = "westeurope"
+resource_group_name     = "rg-terraform-lab-03"
+name_prefix             = "tflab03"
+allowed_ssh_source_cidr = "<your-ip-address>/32"
+admin_ssh_public_key    = "<contents-of-your-ssh-public-key-file>"

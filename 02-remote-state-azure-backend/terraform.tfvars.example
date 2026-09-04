@@ -1,0 +1,4 @@
+subscription_id       = "<your-free-tier-subscription-id>"
+location              = "westeurope"
+resource_group_name   = "rg-terraform-lab-02"
+storage_account_name  = "<your-globally-unique-storage-account-name>"

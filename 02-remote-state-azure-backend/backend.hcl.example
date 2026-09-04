@@ -1,0 +1,9 @@
+# Copy to backend.hcl and fill in with your own bootstrapped backend storage
+# account (see README.md for the az cli commands that create it). backend.hcl
+# is gitignored, same treatment as terraform.tfvars, since it can end up
+# naming real resources tied to a real subscription.
+
+resource_group_name = "<your-backend-resource-group>"
+storage_account_name = "<your-backend-storage-account-name>"
+container_name       = "tfstate"
+key                   = "02-remote-state-azure-backend.tfstate"
