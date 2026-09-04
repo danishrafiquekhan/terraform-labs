@@ -1,4 +1,4 @@
-# 06 — security header baseline at the gateway
+**06 — security header baseline at the gateway**
 
 An `azurerm_application_gateway` with a rewrite rule set that adds the security
 headers an external pen test or scanner keeps flagging as missing, and strips the
@@ -6,7 +6,7 @@ headers that leak framework/version info. Follows the same BEFORE/AFTER pattern 
 exercise 05: `BEFORE.md` documents the gap as it actually looked (a routing rule
 with no rewrite rule set at all), `main.tf` only ever contains the fixed version.
 
-## The pattern this is based on
+**The pattern this is based on**
 Multiple web apps sitting behind one Application Gateway, each deployed and
 maintained by a different team on its own schedule. An external pen test / scan
 report kept coming back with the same findings, missing `Strict-Transport-Security`,
@@ -17,7 +17,7 @@ look up known CVEs for. None of that is one team being careless, it's what happe
 by default any time header hygiene is left to whoever happens to be deploying an
 app that week.
 
-## Why enforce this at the gateway instead of trusting every app deployment
+**Why enforce this at the gateway instead of trusting every app deployment**
 Because "every app team remembers to configure this correctly, every time, forever"
 is not a control, it's a hope. A rewrite rule set on the gateway is one place to
 get it right instead of N places to get it right, and it holds even when a new app
@@ -26,7 +26,7 @@ checklist. This mirrors the same lesson as exercise 05 and exercise 03's network
 module: push the guardrail down to the layer that can't be skipped, instead of
 relying on every caller doing the right thing on their own.
 
-## What the rewrite rule set does
+**What the rewrite rule set does**
 Two rules, applied to every response through the `listener-app-https` listener:
 - **`add-security-headers`** (sequence 100) — sets `Content-Security-Policy`
   (from `var.content_security_policy`, since CSP is genuinely app-specific and I'm
@@ -37,7 +37,7 @@ Two rules, applied to every response through the `listener-app-https` listener:
   `X-AspNet-Version`, `X-AspNetMvc-Version`, `X-Powered-By`, `X-XSS-Protection`, and
   `Expect-CT`.
 
-## The honest limitation of this fix
+**The honest limitation of this fix**
 A rewrite rule can normalize what header *name and value* leaves the gateway. It
 cannot verify that the `Content-Security-Policy` value is actually a good policy
 for the app behind it, or that the app doesn't have inline `<script>` tags that
@@ -53,7 +53,7 @@ wrong move for an API that returns JSON. If this pattern gets reused for somethi
 other than a plain website, that rule needs to be scoped or dropped, not copy-pasted
 blind.
 
-## Running it
+**Running it**
 ```bash
 cp terraform.tfvars.example terraform.tfvars
 # fill in your subscription ID, a real Key Vault secret ID for the TLS cert if
@@ -66,7 +66,7 @@ terraform apply
 terraform destroy   # when done
 ```
 
-## Notes from actually running this
+**Notes from actually running this**
 `terraform fmt` and `terraform validate` pass clean against this config's shape.
 Have not applied it against a live subscription, an Application Gateway is not a
 free-tier-eligible resource and I did not want to leave one running by accident

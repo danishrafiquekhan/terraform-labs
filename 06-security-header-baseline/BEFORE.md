@@ -1,4 +1,4 @@
-# What this looked like before the fix
+**What this looked like before the fix**
 
 Never actually applied anywhere — same pattern as exercise 05. This is what the
 `request_routing_rule` block for the app listener would have looked like without
@@ -18,7 +18,7 @@ request_routing_rule {
 }
 ```
 
-## Why this matters
+**Why this matters**
 No rewrite rule set means the gateway is just a dumb pipe for response headers. If
 the app behind it never got around to setting `Strict-Transport-Security`, doesn't
 set `X-Content-Type-Options`, and the framework it runs on happily announces
@@ -30,14 +30,14 @@ easy to introduce (nobody has to do anything wrong, just not do something right)
 and easy to miss in review (headers aren't in the diff of a typical PR the way a
 firewall rule change would be).
 
-## What changed
+**What changed**
 Added a `rewrite_rule_set` on the gateway with two rules: one that adds the six
 required security headers with sane defaults, and one that blanks out the headers
 that leak framework/version info. The routing rule now references that rule set by
 name, so every response through this listener gets normalized on the way out,
 regardless of what the backend app actually sent.
 
-## The honest limitation of the fix
+**The honest limitation of the fix**
 This is covered in more depth in the README, but the short version: a rewrite rule
 can set the `Content-Security-Policy` *header*, it cannot make sure the policy
 inside that header is actually correct for the app, or that the app doesn't have
