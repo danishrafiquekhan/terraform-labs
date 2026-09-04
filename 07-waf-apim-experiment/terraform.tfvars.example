@@ -1,0 +1,8 @@
+subscription_id                       = "<your-free-tier-subscription-id>"
+location                              = "westeurope"
+website_hostname                      = "www.example-lab.internal"
+website_backend_fqdn                  = "app.example-lab.internal"
+website_ssl_cert_key_vault_secret_id  = "https://kv-example-lab.vault.azure.net/secrets/website-cert/<version>"
+apim_dev_hostname                     = "api-dev.example-lab.internal"
+apim_dev_backend_fqdn                 = "apim-dev-example.azure-api.net"
+apim_dev_ssl_cert_key_vault_secret_id = "https://kv-example-lab.vault.azure.net/secrets/apim-dev-cert/<version>"
