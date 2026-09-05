@@ -1,5 +1,7 @@
 **terraform-labs**
 
+[![CI](https://github.com/danishrafiquekhan/terraform-labs/actions/workflows/ci.yml/badge.svg)](https://github.com/danishrafiquekhan/terraform-labs/actions/workflows/ci.yml)
+
 Working through the Terraform Associate material one exercise per folder. Doing this because I want actual muscle memory with it, not just enough to pass a multiple-choice exam. A lot of the detection/security automation roles I am looking at expect you to be comfortable deploying infrastructure as code, not just reading someone else's Terraform.
 
 Everything here runs against a free-tier Azure subscription that is completely separate from any work tenant. Never pointing this at anything real.
