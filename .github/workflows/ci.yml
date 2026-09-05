@@ -1,0 +1,52 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: terraform fmt -check across all labs
+        run: terraform fmt -check -recursive -diff
+
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        lab:
+          - 01-first-resource-group
+          - 02-remote-state-azure-backend
+          - 03-modules-networking-compute
+          - 04-terraform-cloud-integration
+          - 05-misconfig-then-fix
+          - 06-security-header-baseline
+          - 07-waf-apim-experiment
+          - 08-aws-localstack-real-apply
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: terraform validate (no backend, no credentials needed)
+        working-directory: ${{ matrix.lab }}
+        run: |
+          terraform init -backend=false -input=false
+          terraform validate
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Gitleaks scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
